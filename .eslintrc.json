@@ -3,7 +3,7 @@
     "next/core-web-vitals",
     "next/typescript"
   ],
-  "rules": { // rules configuration here <-----
-    "no-unused-vars": "off"
+  "rules": {
+    "@typescript-eslint/no-unused-vars": 0
   }
 }
