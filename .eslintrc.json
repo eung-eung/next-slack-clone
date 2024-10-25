@@ -5,6 +5,16 @@
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": 0,
-    "@typescript-eslint/no-explicit-any": 0
+    "@typescript-eslint/no-explicit-any": 0,
+    "@next/next/no-img-element": 0,
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "extendDefaults": true,
+        "types": {
+          "{}": false
+        }
+      }
+    ]
   }
 }
