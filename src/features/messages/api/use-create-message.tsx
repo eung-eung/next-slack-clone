@@ -8,7 +8,8 @@ type RequestType = {
     workspaceId: Id<"workspaces">,
     image?: Id<"_storage">,
     channelId?: Id<"channels">,
-    parentMessageId?: Id<"messages">
+    parentMessageId?: Id<"messages">,
+    conversationId?: Id<"conversations">
 }
 type ResponseType = Id<"messages"> | null
 
@@ -23,30 +24,18 @@ export const useCreateMessage = () => {
     const [data, setData] = useState<ResponseType>(null)
     const [error, setError] = useState<Error | null>(null)
     const [status, setStatus] = useState<"error" | "success" | "pending" | "settled" | null>(null)
-    // const [isPending, setIsPending] = useState(false)
-    // const [isSuccess, setIsSuccess] = useState(false)
-    // const [isError, setIsError] = useState(false)
-    // const [isSettled, setIsSettled] = useState(false)
+
     const isPending = useMemo(() => {
-        console.log('calculate isPending');
-        console.log('status in isPending: ', status);
         return status === "pending"
 
     }, [status])
     const isError = useMemo(() => {
-        console.log('calculate isError');
-        console.log('status in isError: ', status);
-
         return status === 'error'
     }, [status])
     const isSettled = useMemo(() => {
-        console.log('calculate isSettled');
-        console.log('status in isSettled: ', status);
         return status === 'settled'
     }, [status])
     const isSuccess = useMemo(() => {
-        console.log('calculate isSuccess');
-        console.log('status in isSuccess: ', status);
         return status === 'pending'
     }, [status])
 
