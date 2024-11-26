@@ -37,33 +37,33 @@ export const EmojiPopover = ({
         }, 500)
     }
     return (
-        <div>
-            <TooltipProvider>
-                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                    <Tooltip
-                        open={tooltipOpen}
-                        onOpenChange={setTooltipOpen}
-                        delayDuration={50}
-                    >
-                        <PopoverTrigger asChild>
-                            <TooltipTrigger asChild>
-                                {children}
-                            </TooltipTrigger>
-                        </PopoverTrigger>
-                        <TooltipContent
-                            className="bg-black text-white border border-white/5"
-                        >
-                            <p className="font-medium text-xs">{hint}</p>
-                        </TooltipContent>
-                    </Tooltip>
 
-                    <PopoverContent className="p-0 w-full border-none shadow-none">
-                        <Picker
-                            data={data}
-                            onEmojiSelect={onSelect} />
-                    </PopoverContent>
-                </Popover>
-            </TooltipProvider>
-        </div>
+        <TooltipProvider>
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                <Tooltip
+                    open={tooltipOpen}
+                    onOpenChange={setTooltipOpen}
+                    delayDuration={50}
+                >
+                    <PopoverTrigger asChild>
+                        <TooltipTrigger asChild>
+                            {children}
+                        </TooltipTrigger>
+                    </PopoverTrigger>
+                    <TooltipContent
+                        className="bg-black text-white border border-white/5"
+                    >
+                        <p className="font-medium text-xs">{hint}</p>
+                    </TooltipContent>
+                </Tooltip>
+
+                <PopoverContent className="p-0 w-full border-none shadow-none">
+                    <Picker
+                        data={data}
+                        onEmojiSelect={onSelect} />
+                </PopoverContent>
+            </Popover>
+        </TooltipProvider>
+
     )
 }
