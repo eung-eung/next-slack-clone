@@ -29,8 +29,8 @@ interface EditorProps {
     placeholder?: string,
     disabled?: boolean,
     innerRef?: MutableRefObject<Quill | null>,
-    image: File | null,
-    setImage: React.SetStateAction<any>,
+    image?: File | null,
+    setImage?: React.SetStateAction<any>,
     // imageElementRef: any
 }
 
@@ -166,6 +166,7 @@ const Editor = ({
         quill?.insertText(quill.getSelection()?.index || 0, emoji.native)
     }
 
+
     const handleRemoveImage = useCallback(() => {
         setImage(null)
         imageElementRef.current!.value = ""
@@ -185,10 +186,14 @@ const Editor = ({
                 disabled && "opacity-50"
             )}>
                 <div ref={containerRef} className="h-full ql-custom" />
-                <ImageEditor
-                    image={image}
-                    handleRemoveImage={handleRemoveImage}
-                />
+                {
+                    image &&
+                    <ImageEditor
+                        image={image}
+                        handleRemoveImage={handleRemoveImage}
+                    />
+                }
+
                 <div className="flex px-2 pb-2 z-[5]">
                     <Hint label={isToolbarVisible ? "Hide formatting" : "Show formatting"}>
                         <Button
@@ -227,7 +232,12 @@ const Editor = ({
                                 variant="outline"
                                 size="sm"
                                 disabled={disabled || isEmpty}
-                                onClick={() => { }}
+                                onClick={() => {
+                                    onSubmit({
+                                        body: JSON.stringify(quillRef.current?.getContents()),
+                                        image: image || null
+                                    })
+                                }}
                                 className="bg-[#007a58] hover:bg-[#007a58]/80 text-white"
                             >
                                 Save
@@ -253,7 +263,7 @@ const Editor = ({
                             onClick={() => {
                                 onSubmit({
                                     body: JSON.stringify(quillRef.current?.getContents()),
-                                    image
+                                    image: image || null
                                 })
                             }}
                             disabled={isEmpty || disabled}
