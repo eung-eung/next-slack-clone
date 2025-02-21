@@ -4,7 +4,6 @@ import { FaChevronDown } from 'react-icons/fa'
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -40,7 +39,7 @@ export const Header = ({ title }: HeaderProps) => {
     const [editOpen, setEditOpen] = useState(false)
     const { mutate: updateChannel, isPending: updatingChannel } = useUpdateChannel()
     const { mutate: removeChannel, isPending: removingChannel } = useRemoveChannel()
-    const { data: member, isLoading: memberLoading } = useCurrentMember({ workspaceId })
+    const { data: member } = useCurrentMember({ workspaceId })
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/\s+/g, "-").toLowerCase()
         setValue(value)

@@ -2,7 +2,9 @@ import { MessageSquareTextIcon, Pencil, SmileIcon, Trash } from "lucide-react"
 import { Button } from "./ui/button"
 import { Hint } from "./hint"
 import { EmojiPopover } from "./emoji-popover"
+import { MdTranslate } from "react-icons/md"
 interface ToolbarProps {
+    isText: boolean,
     isAuthor: boolean,
     isPending: boolean,
     handleEdit: () => void,
@@ -13,6 +15,7 @@ interface ToolbarProps {
 }
 
 export const Toolbar = ({
+    isText,
     isAuthor,
     isPending,
     handleEdit,
@@ -21,6 +24,8 @@ export const Toolbar = ({
     handleReaction,
     hideThreadButton
 }: ToolbarProps) => {
+
+
     // emoji.native = 😑
     return (
         <div className="absolute top-0 right-5">
@@ -74,7 +79,19 @@ export const Toolbar = ({
                     </>
                 )}
 
-
+                {
+                    isText && (
+                        <Hint label="Translate message">
+                            <Button
+                                variant="ghost"
+                                size="iconSm"
+                                disabled={isPending}
+                                onClick={() => { }}
+                            >
+                                <MdTranslate className="size-4" />
+                            </Button>
+                        </Hint>)
+                }
             </div>
         </div>
     )

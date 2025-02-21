@@ -9,9 +9,9 @@ import { useGetMessages } from "@/features/messages/api/use-get-messages"
 import MessageList from "@/components/message-list"
 
 
+
 export default function ChannelIdPage() {
     const channelId = useChannelId()
-
     const { results, status, loadMore } = useGetMessages({ channelId })
     const { data: channel, isLoading: channelLoading } = useGetChannel({ channelId })
 
@@ -20,7 +20,7 @@ export default function ChannelIdPage() {
             <Loader className="size-5 animate-spin text-muted-foreground" />
         </div>)
     }
-    console.log(results);
+
 
     if (!channel) {
         return (
