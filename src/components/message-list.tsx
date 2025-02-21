@@ -7,6 +7,7 @@ import { Id } from '../../convex/_generated/dataModel'
 import { useWorkspaceId } from '@/hooks/use-workspace-id'
 import { useCurrentMember } from '@/features/members/api/use-current-member'
 import { Loader } from 'lucide-react'
+import { ConversationHero } from './conversation-hero'
 
 const TIME_THRESHOLD = 5
 
@@ -20,6 +21,11 @@ interface MessageListProps {
     loadMore: () => void,
     isLoadingMore: boolean,
     canLoadMore: boolean
+}
+
+type BodyMessage = {
+    insert?: string,
+    attributes?: string
 }
 
 const formatDateLabel = (dateStr: string) => {
@@ -59,7 +65,12 @@ export default function MessageList({
         },
         {} as Record<string, typeof data>
     )//=> "03/10/2024: ['hahaha','ookok','zzzzz']"
+    if (data[0]) {
+        console.log(JSON.parse(data[0].body));
 
+        const cleanedBody = JSON.parse(data[0].body).ops.map((o: BodyMessage) => o.insert)
+        console.log("clean", cleanedBody.join(" ").trim());
+    }
 
     return (
         <div className='flex-1 flex flex-col-reverse pb-4 overflow-y-auto messages-scrollbar'>
@@ -101,6 +112,7 @@ export default function MessageList({
                                 hideThreadButton={variant === "thread"}
                                 threadCount={message.threadCount}
                                 threadImage={message.threadImage}
+                                threadName={message.threadName}
                                 threadTimestamp={message.threadTimestamp}
                             />
                         )
@@ -110,12 +122,8 @@ export default function MessageList({
             {/* observer infinity scroll */}
             <div className='h-1'
                 ref={(el) => {
-                    console.log('ele: ', el);
-
                     if (el) {
                         const observer = new IntersectionObserver(([entry]) => {
-                            console.log("entry: ", entry);
-
                             if (entry.isIntersecting && canLoadMore) {
                                 loadMore()
                             }
@@ -127,6 +135,7 @@ export default function MessageList({
                     }
                 }}
             />
+
             {isLoadingMore && (
                 <div className='text-center my-2 relative'>
                     <hr className='absolute top-1/2 left-0 right-0 border-t border-gray-300'></hr>
@@ -135,10 +144,18 @@ export default function MessageList({
                     </span>
                 </div>
             )}
+
             {variant === "channel" && channelName && channelCreationTime && (
                 <ChannelHero
                     name={channelName}
                     creationTime={channelCreationTime}
+                />
+            )}
+
+            {variant === "conversation" && memberName && (
+                <ConversationHero
+                    name={memberName}
+                    image={memberImage}
                 />
             )}
         </div>

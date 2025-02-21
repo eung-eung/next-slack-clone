@@ -13,6 +13,8 @@ import { useRemoveMessage } from '@/features/messages/api/use-remove-message'
 import { useConfirm } from '@/hooks/use-confirm'
 import { useToggleReaction } from '@/features/reactions/use-toggle-reaction'
 import Reactions from './reactions'
+import { usePanel } from '@/hooks/use-panel'
+import ThreadBar from './thread-bar'
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false })
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false })
@@ -39,6 +41,7 @@ interface MessageProps {
     hideThreadButton?: boolean,
     threadCount?: number,
     threadImage?: string,
+    threadName?: string,
     threadTimestamp?: number
 }
 
@@ -63,9 +66,10 @@ export default function Message({
     hideThreadButton,
     threadCount,
     threadImage,
+    threadName,
     threadTimestamp
 }: MessageProps) {
-
+    const { parentMessageId, onOpenMessage, onClose, onOpenProfile } = usePanel()
     const [ConfirmDialog, confirm] = useConfirm(
         "Delete message",
         "Are you sure you want to delete this message? This cannot be undone"
@@ -75,7 +79,8 @@ export default function Message({
     const { mutate: removeMessage, isPending: isRemovingMessage } = useRemoveMessage()
     const { mutate: toggleReaction, isPending: isTogglingReaction } = useToggleReaction()
 
-    const isPending = isUpdatingMessage
+    const isPending = isUpdatingMessage || isTogglingReaction
+
 
     const handleReaction = (value: string) => {
         toggleReaction({ messageId: id, value }, {
@@ -106,6 +111,9 @@ export default function Message({
                 toast.success("Message deleted")
 
                 //Close thread if it opened
+                if (parentMessageId === id) {
+                    onClose()
+                }
             },
             onError: () => {
                 toast.error("Failed to delete message")
@@ -146,6 +154,13 @@ export default function Message({
                                     <span className='text-xs text-muted-foreground'>(edited)</span>)
                                     : null}
                                 <Reactions data={reactions} onChange={handleReaction} />
+                                <ThreadBar
+                                    name={threadName}
+                                    count={threadCount}
+                                    image={threadImage}
+                                    timestamp={threadTimestamp}
+                                    onClick={() => onOpenMessage(id)}
+                                />
                             </div>
                         )
                         }
@@ -153,10 +168,11 @@ export default function Message({
                     </div>
                     {!isEditing && (
                         <Toolbar
+                            isText={!!body}
                             isAuthor={isAuthor}
                             isPending={false}
                             handleEdit={() => setEditingId(id)}
-                            handleThread={() => { }}
+                            handleThread={() => onOpenMessage(id)}
                             handleDelete={handleDelete}
                             handleReaction={() => { }}
                             hideThreadButton={hideThreadButton}
@@ -175,7 +191,7 @@ export default function Message({
                 isRemovingMessage && "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
             )}>
                 <div className='flex items-start gap-2'>
-                    <button>
+                    <button onClick={() => onOpenProfile(memberId)}>
                         <Avatar className='rounded-md'>
                             <AvatarImage className='rounded-md' src={authorImage} />
                             <AvatarFallback className='rounded-md text-white bg-sky-500'>
@@ -197,7 +213,7 @@ export default function Message({
                         <div className='flex flex-col w-full overflow-hidden'>
                             <div className='text-sm'>
                                 <button
-                                    onClick={() => { }}
+                                    onClick={() => onOpenProfile(memberId)}
                                     className='font-bold text-primary hover:underline'>
                                     {authorName}
                                 </button>
@@ -217,16 +233,25 @@ export default function Message({
                                 </span>
                             ) : null}
                             <Reactions data={reactions} onChange={handleReaction} />
+                            <ThreadBar
+                                name={threadName}
+                                count={threadCount}
+                                image={threadImage}
+                                timestamp={threadTimestamp}
+                                onClick={() => onOpenMessage(id)}
+                            />
                         </div>
+
                     )}
 
                 </div>
                 {!isEditing && (
                     <Toolbar
+                        isText={!!body}
                         isAuthor={isAuthor}
                         isPending={false}
                         handleEdit={() => setEditingId(id)}
-                        handleThread={() => { }}
+                        handleThread={() => onOpenMessage(id)}
                         handleDelete={handleDelete}
                         handleReaction={handleReaction}
                         hideThreadButton={hideThreadButton}
