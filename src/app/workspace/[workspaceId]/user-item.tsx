@@ -44,7 +44,7 @@ export default function UserItem({
             asChild
             size="sm"
         >
-            <Link href={`workspace/${workspaceId}/member/${id}`}>
+            <Link href={`/workspace/${workspaceId}/member/${id}`}>
                 <Avatar className='size-5 rounded-md mr-1'>
                     <AvatarImage className='rounded-md' src={image} />
                     <AvatarFallback className='rounded-md text-white bg-sky-500'>
