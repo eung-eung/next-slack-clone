@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useMemo } from "react";
-import { UserButton } from "@/features/auth/components/user-button";
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 import { useRouter } from "next/navigation";
@@ -26,8 +25,8 @@ export default function Home() {
     }
   }, [workspaceId, isLoading, open, setOpen, router])
   return (
-    <div>
-
+    <div className="h-full flex-1 flex items-center justify-center flex-col gap-2">
+      <Loader className="size-6 animate-spin text-muted-foreground" />
     </div>
 
   );
